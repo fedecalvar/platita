@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute, PublicOnlyRoute } from "@/components/layout/routes";
+import { Accounts } from "@/pages/Accounts";
 import { Dashboard } from "@/pages/Dashboard";
 import { Login } from "@/pages/Login";
 import { Register } from "@/pages/Register";
+import { Transactions } from "@/pages/Transactions";
 
 export function App() {
   return (
@@ -14,6 +16,8 @@ export function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/cuentas" element={<Accounts />} />
+        <Route path="/transacciones" element={<Transactions />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

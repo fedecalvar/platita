@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { AppShell } from "./AppShell";
 
 // Envuelve las rutas privadas (Dashboard, Cuentas, Transacciones). Mientras
 // useAuth todavía está validando un token guardado contra /auth/me no
@@ -18,7 +19,11 @@ export function ProtectedRoute() {
 
   if (!user) return <Navigate to="/login" replace />;
 
-  return <Outlet />;
+  return (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  );
 }
 
 // Inverso: Login/Registro no tienen sentido con sesión activa, mandan al
