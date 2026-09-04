@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // En Prisma 7 el connection string ya no va acá: se define en
+  // prisma.config.ts (datasource.url), que es lo que usa el CLI para
+  // migrate/introspect. El PrismaClient en runtime igual se conecta vía el
+  // adapter de pg (ver src/lib/prisma.ts), no a través de este campo.
+}
+
+enum TransactionType {
+  income
+  expense
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String
+  createdAt DateTime  @default(now())
+  accounts  Account[]
+}
+
+model Account {
+  id           String        @id @default(uuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+
+  @@index([userId])
+}
+
+model Category {
+  id           String           @id @default(uuid())
+  name         String
+  type         TransactionType
+  icon         String
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String           @id @default(uuid())
+  accountId   String
+  account     Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    Category         @relation(fields: [categoryId], references: [id])
+  amount      Decimal          @db.Decimal(12, 2)
+  type        TransactionType
+  description String?
+  date        DateTime
+  createdAt   DateTime         @default(now())
+
+  @@index([accountId])
+  @@index([categoryId])
+  @@index([date])
+}
