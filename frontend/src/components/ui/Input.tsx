@@ -2,7 +2,7 @@ import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string;
   icon?: ReactNode;
   rightElement?: ReactNode;
   error?: string;
@@ -20,9 +20,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={inputId} className="font-sans text-label-md text-on-surface">
-        {label}
-      </label>
+      {label && (
+        <label htmlFor={inputId} className="font-sans text-label-md text-on-surface">
+          {label}
+        </label>
+      )}
       <div className="relative flex items-center">
         {icon && <span className="pointer-events-none absolute left-3 text-outline">{icon}</span>}
         <input

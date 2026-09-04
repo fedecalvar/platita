@@ -15,21 +15,48 @@ export function formatSignedCurrency(amount: number): string {
   return `${sign}${formatCurrency(amount)}`;
 }
 
-const dayFormatter = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short" });
+// timeZone: "UTC" es la parte que importa acá: sin esto, Intl formatea en
+// el huso horario local del navegador, y una fecha guardada como
+// "2026-09-01" (medianoche UTC, ver dashboard.service.ts) se muestra como
+// "31 ago" en cualquier huso detrás de UTC (Argentina incluida) — lo
+// detecté probando con datos reales, se veía mal en el listado.
+const dayFormatter = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short", timeZone: "UTC" });
 
-// Las fechas de transacciones llegan como "YYYY-MM-DD" (sin hora) y el
-// backend las trata siempre en UTC (ver el comentario de monthRange en
-// dashboard.service.ts) — comparamos acá también en UTC para no correrlas
-// un día en husos horarios detrás de UTC como Argentina.
 export function formatTransactionDate(iso: string): string {
   const date = new Date(iso);
   const now = new Date();
 
-  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  // "Hoy"/"Ayer" comparan contra el día calendario LOCAL del usuario (acá sí
+  // queremos su día real, no el de UTC), contra el día UTC que representa
+  // la fecha guardada (mismo criterio que isoToDateInputValue).
+  const todayLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const dateUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-  const diffDays = Math.round((todayUTC - dateUTC) / 86_400_000);
+  const diffDays = Math.round((todayLocal - dateUTC) / 86_400_000);
 
   if (diffDays === 0) return "Hoy";
   if (diffDays === 1) return "Ayer";
   return dayFormatter.format(date);
+}
+
+// Para precargar el <input type="date"> al editar una transacción: hay que
+// leer los componentes en UTC (no local) porque así es como el backend
+// interpreta y guarda la fecha (ver formatTransactionDate arriba) — usar
+// getDate() en vez de getUTCDate() correría la fecha un día en Argentina.
+export function isoToDateInputValue(iso: string): string {
+  const date = new Date(iso);
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+// Para el valor por defecto de una transacción NUEVA sí queremos el "hoy"
+// real del usuario (hora local), no el de UTC — a la noche en Argentina
+// (UTC-3) ya es "mañana" en UTC.
+export function getTodayInputValue(): string {
+  const date = new Date();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
