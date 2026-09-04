@@ -5,6 +5,7 @@ import { errorHandler } from "./middlewares/error.middleware";
 import { accountRouter } from "./routes/account.routes";
 import { authRouter } from "./routes/auth.routes";
 import { categoryRouter } from "./routes/category.routes";
+import { dashboardRouter } from "./routes/dashboard.routes";
 import { transactionRouter } from "./routes/transaction.routes";
 
 const app = express();
@@ -20,8 +21,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/accounts", accountRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/transactions", transactionRouter);
-
-// TODO: dashboard
+app.use("/api/dashboard", dashboardRouter);
 
 // errorHandler tiene que ir al final, después de todas las rutas
 app.use(errorHandler);
