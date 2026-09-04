@@ -1,3 +1,7 @@
+// Carga el .env acá mismo (no solo en index.ts) para que este módulo funcione
+// sin depender de quién lo importe primero: scripts sueltos como seed.ts,
+// tests, etc. `dotenv/config` no pisa variables ya seteadas por el entorno.
+import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 

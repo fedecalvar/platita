@@ -1,3 +1,7 @@
+// Necesario porque este script se puede correr directo con `tsx` (sin pasar
+// por el CLI de Prisma, que carga el .env vía prisma.config.ts) y prisma.ts
+// necesita DATABASE_URL ya seteada al construir el adapter.
+import "dotenv/config";
 import { prisma } from "../lib/prisma";
 
 // Categorías predefinidas (ver CLAUDE.md). Son fijas para el MVP: no hay
