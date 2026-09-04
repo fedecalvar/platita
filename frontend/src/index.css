@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens de /design.md, sección "colors" del frontmatter — es la
+ * paleta que usan los 5 mockups de Stitch (confirmado a mano: el frontmatter
+ * y la sección de prosa del mismo archivo traen paletas distintas; elegimos
+ * replicar los mockups pixel a pixel en vez de la paleta "Warm Modern
+ * Fintech" de la prosa).
+ *
+ * Tailwind v4 genera automáticamente las utilidades (bg-primary, text-error,
+ * etc.) a partir de cualquier variable --color-*, --text-*, --font-*,
+ * --radius-* definida acá — no hace falta un tailwind.config.js aparte.
+ */
+@theme {
+  /* Tipografía: Sora para headings/números grandes, Inter para el resto
+     (ver design.md → typography). Se usan como clase `font-heading` /
+     el body ya trae Inter por default (ver más abajo). */
+  --font-heading: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Superficies */
+  --color-surface: #fff8f5;
+  --color-surface-dim: #e2d8d2;
+  --color-surface-bright: #fff8f5;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #fcf2eb;
+  --color-surface-container: #f6ece6;
+  --color-surface-container-high: #f0e6e0;
+  --color-surface-container-highest: #eae1da;
+  --color-surface-variant: #eae1da;
+  --color-on-surface: #1f1b17;
+  --color-on-surface-variant: #3d4947;
+  --color-inverse-surface: #342f2b;
+  --color-inverse-on-surface: #f9efe8;
+  --color-outline: #6d7a77;
+  --color-outline-variant: #bcc9c6;
+
+  /* Marca */
+  --color-primary: #00685f;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #008378;
+  --color-on-primary-container: #f4fffc;
+  --color-inverse-primary: #6bd8cb;
+  --color-primary-fixed: #89f5e7;
+  --color-primary-fixed-dim: #6bd8cb;
+  --color-on-primary-fixed: #00201d;
+  --color-on-primary-fixed-variant: #005049;
+
+  /* Secundario (ámbar, usado para acentos y "ingreso rápido") */
+  --color-secondary: #855300;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #fea619;
+  --color-on-secondary-container: #684000;
+  --color-secondary-fixed: #ffddb8;
+  --color-secondary-fixed-dim: #ffb95f;
+  --color-on-secondary-fixed: #2a1700;
+  --color-on-secondary-fixed-variant: #653e00;
+
+  /* Terciario: se usa como color semántico de "ingreso" en los mockups */
+  --color-tertiary: #006947;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #00855b;
+  --color-on-tertiary-container: #f5fff6;
+  --color-tertiary-fixed: #6ffbbe;
+  --color-tertiary-fixed-dim: #4edea3;
+  --color-on-tertiary-fixed: #002113;
+  --color-on-tertiary-fixed-variant: #005236;
+
+  /* Error: se usa como color semántico de "gasto" además de estados de error */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-background: #fff8f5;
+  --color-on-background: #1f1b17;
+
+  /* Radios (design.md → rounded). "full" no se toca: sigue siendo 9999px,
+     reservado para avatares e indicadores circulares, nunca para cards. */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /*
+   * Escala tipográfica de design.md. Cada --text-* trae su line-height,
+   * tracking y peso agrupados (sintaxis de Tailwind v4) para no repetir
+   * "font-bold text-[22px] leading-7 tracking-tight" en cada lugar donde
+   * se usa un headline.
+   */
+  --text-display-lg: 40px;
+  --text-display-lg--line-height: 48px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-display-lg-mobile: 30px;
+  --text-display-lg-mobile--line-height: 38px;
+  --text-display-lg-mobile--letter-spacing: -0.015em;
+  --text-display-lg-mobile--font-weight: 700;
+
+  --text-headline-lg: 28px;
+  --text-headline-lg--line-height: 36px;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 600;
+
+  --text-headline-md: 22px;
+  --text-headline-md--line-height: 28px;
+  --text-headline-md--font-weight: 600;
+
+  --text-headline-sm: 18px;
+  --text-headline-sm--line-height: 24px;
+  --text-headline-sm--font-weight: 600;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 13px;
+  --text-body-sm--line-height: 18px;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-md: 13px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--letter-spacing: 0.01em;
+  --text-label-md--font-weight: 500;
+
+  --text-label-sm: 11px;
+  --text-label-sm--line-height: 14px;
+  --text-label-sm--letter-spacing: 0.03em;
+  --text-label-sm--font-weight: 600;
+
+  --text-numeric-lg: 32px;
+  --text-numeric-lg--line-height: 40px;
+  --text-numeric-lg--letter-spacing: -0.02em;
+  --text-numeric-lg--font-weight: 700;
+
+  --text-numeric-md: 16px;
+  --text-numeric-md--line-height: 20px;
+  --text-numeric-md--font-weight: 600;
+
+  --text-numeric-sm: 14px;
+  --text-numeric-sm--line-height: 18px;
+  --text-numeric-sm--font-weight: 500;
+
+  /* No es un token de design.md — lo agregamos para no depender del orden
+     de las clases de Tailwind al mezclar "text-body-md" (400) con
+     "font-medium" (500) en botones. Mismo tamaño que body-md, semibold
+     como pide design.md → Components → Buttons. */
+  --text-button: 14px;
+  --text-button--line-height: 20px;
+  --text-button--font-weight: 600;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+    font-feature-settings: "cv11";
+  }
+
+  /* Los montos monetarios siempre con numeric-lg/md/sm usan Sora o Inter
+     según el token, pero en todos los casos necesitan tabular-nums para que
+     las columnas de números no "salten" al escanear una lista (ver
+     design.md → Numeric Rules). Se aplica acá una vez para no repetir
+     `tabular-nums` en cada componente que muestra plata. */
+  .numeric,
+  [class*="text-numeric-"] {
+    font-variant-numeric: tabular-nums;
+  }
+}
