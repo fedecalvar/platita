@@ -83,9 +83,13 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   if (!json || !response.ok || !json.success) {
     // Un 401 acá siempre significa "token vencido o inválido" (ver
     // requireAuth en el backend, nunca devuelve 401 por otra razón). Limpiar
-    // el token en el cliente evita quedar en un loop de pantallas protegidas
-    // pidiendo datos con un JWT que el backend ya rechaza.
-    if (response.status === 401) clearToken();
+    // el token no alcanza solo: useAuth guarda el user en memoria, así que
+    // sin este evento la sesión seguiría "activa" en pantalla hasta el
+    // próximo reload — el evento le avisa a useAuth ahora mismo.
+    if (response.status === 401) {
+      clearToken();
+      window.dispatchEvent(new Event("platita:unauthorized"));
+    }
 
     const message = json && !json.success ? json.error.message : "Error inesperado del servidor";
     const code = json && !json.success ? json.error.code : "UNKNOWN_ERROR";
@@ -140,14 +144,25 @@ export interface TransactionInput {
   date: string;
 }
 
+// Prisma serializa `Decimal` como STRING en JSON (probado contra el backend
+// real: `"amount":"12000"`, con comillas) — sin este normalizador, todo lo
+// que toque tx.amount funciona hoy de pura casualidad (Math.abs, el menos
+// unario y las comparaciones coaccionan strings a número solas), pero
+// `total += tx.amount` en el futuro concatenaría strings en vez de sumar.
+function normalizeTransaction(tx: Transaction): Transaction {
+  return { ...tx, amount: Number(tx.amount) };
+}
+
 export const transactionsApi = {
-  list: (filters: TransactionFilters = {}) =>
-    apiFetch<Transaction[]>("/transactions", { params: filters }),
-  get: (id: string) => apiFetch<Transaction>(`/transactions/${id}`),
-  create: (input: TransactionInput) =>
-    apiFetch<Transaction>("/transactions", { method: "POST", body: input }),
-  update: (id: string, input: Partial<TransactionInput>) =>
-    apiFetch<Transaction>(`/transactions/${id}`, { method: "PATCH", body: input }),
+  list: async (filters: TransactionFilters = {}) => {
+    const data = await apiFetch<Transaction[]>("/transactions", { params: filters });
+    return data.map(normalizeTransaction);
+  },
+  get: async (id: string) => normalizeTransaction(await apiFetch<Transaction>(`/transactions/${id}`)),
+  create: async (input: TransactionInput) =>
+    normalizeTransaction(await apiFetch<Transaction>("/transactions", { method: "POST", body: input })),
+  update: async (id: string, input: Partial<TransactionInput>) =>
+    normalizeTransaction(await apiFetch<Transaction>(`/transactions/${id}`, { method: "PATCH", body: input })),
   remove: (id: string) => apiFetch<null>(`/transactions/${id}`, { method: "DELETE" }),
 };
 

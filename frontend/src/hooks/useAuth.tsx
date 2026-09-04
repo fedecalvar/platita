@@ -38,6 +38,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  useEffect(() => {
+    // apiFetch dispara esto en cualquier 401 (token vencido en medio de la
+    // sesión, no solo al cargar la app) — sin este listener, `user` se
+    // queda con el valor viejo en memoria y las rutas protegidas siguen
+    // pensando que hay sesión hasta el próximo reload completo.
+    function handleUnauthorized() {
+      setUser(null);
+    }
+    window.addEventListener("platita:unauthorized", handleUnauthorized);
+    return () => window.removeEventListener("platita:unauthorized", handleUnauthorized);
+  }, []);
+
   async function login(email: string, password: string, remember = true) {
     const result = await authApi.login({ email, password });
     setToken(result.token, remember);
