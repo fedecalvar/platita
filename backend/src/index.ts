@@ -10,7 +10,10 @@ import { transactionRouter } from "./routes/transaction.routes";
 
 const app = express();
 
-app.use(cors());
+// FRONTEND_URL restringe CORS en producción; sin setear, permite cualquier origen (dev).
+const frontendUrl = process.env.FRONTEND_URL;
+app.use(cors(frontendUrl ? { origin: frontendUrl } : undefined));
+
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
