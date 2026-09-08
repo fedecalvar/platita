@@ -15,7 +15,7 @@ completo (no en cobertura de features).
 
 | Transacciones | Iniciar sesión |
 |---|---|
-| ![Transacciones](docs/screenshots/transacciones.png) | ![Login](docs/screenshots/login..png) |
+| ![Transacciones](docs/screenshots/transacciones.png) | ![Login](docs/screenshots/login.png) |
 
 ## Features
 
