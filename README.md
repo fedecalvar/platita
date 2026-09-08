@@ -4,19 +4,18 @@ Gestor de finanzas personales simple y transparente. Permite registrar cuentas, 
 ingresos y gastos, y ver de un vistazo cómo está tu plata: balance total, gastos por
 categoría y últimos movimientos.
 
-Proyecto de portfolio desarrollado por [Federico Calvar](https://github.com/fedecalvar),
-con foco en un modelo de datos relacional bien diseñado y un flujo de autenticación
+Proyecto con foco en un modelo de datos relacional bien diseñado y un flujo de autenticación
 completo (no en cobertura de features).
 
 ## Capturas
 
 | Dashboard | Cuentas |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.jpg) | ![Cuentas](docs/screenshots/cuentas.jpg) |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Cuentas](docs/screenshots/cuentas.png) |
 
 | Transacciones | Iniciar sesión |
 |---|---|
-| ![Transacciones](docs/screenshots/transacciones.jpg) | ![Login](docs/screenshots/login.jpg) |
+| ![Transacciones](docs/screenshots/transacciones.png) | ![Login](docs/screenshots/login..png) |
 
 ## Features
 
