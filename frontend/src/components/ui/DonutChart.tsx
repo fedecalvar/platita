@@ -23,6 +23,11 @@ export function DonutChart({ segments, size = 200, strokeWidth = 18, children }:
 
   let accumulated = 0;
 
+  // Diámetro real del hueco del donut (en px, ya escalado a `size`) — el
+  // contenido central se acota a esto para que un monto grande haga wrap
+  // en vez de desbordar sobre el anillo de colores.
+  const holeDiameter = ((RADIUS - strokeWidth / 2) * 2 * size) / 160;
+
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg viewBox="0 0 160 160" className="-rotate-90" style={{ width: size, height: size }}>
@@ -55,8 +60,13 @@ export function DonutChart({ segments, size = 200, strokeWidth = 18, children }:
             );
           })}
       </svg>
-      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-        {children}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div
+          className="flex flex-col items-center justify-center gap-0.5 text-center"
+          style={{ maxWidth: holeDiameter }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

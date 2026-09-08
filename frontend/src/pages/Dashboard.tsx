@@ -154,7 +154,7 @@ export function Dashboard() {
                   <span className="font-sans text-label-sm text-on-surface-variant uppercase tracking-wider">
                     Total del mes
                   </span>
-                  <span className="font-heading text-headline-md text-on-surface">
+                  <span className="font-heading text-headline-sm leading-tight text-on-surface">
                     {formatCurrency(byCategory!.totalExpense)}
                   </span>
                 </DonutChart>
